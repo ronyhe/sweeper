@@ -1,6 +1,6 @@
-package com.ronyhe.sweeper.model.board
+package com.ronyhe.sweeper.com.ronyhe.sweeper.model
 
-import com.ronyhe.sweeper.model.board.Board.{MineCellObject, Cell, Coord, MineCell}
+import com.ronyhe.sweeper.com.ronyhe.sweeper.model.Board.{MineCellObject, Cell, MineCell}
 import com.ronyhe.sweeper.utils.CollectionUtils
 
 import scala.annotation.tailrec
@@ -85,7 +85,6 @@ class Board(rows: Int, cols: Int, mines:Int, firstClick: Coord) {
 }
 
 object Board {
-  type Coord = (Int, Int)
 
   sealed case class Cell(adjacentMines: Int)
   sealed class MineCell extends Cell(0)
