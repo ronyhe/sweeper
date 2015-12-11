@@ -1,6 +1,7 @@
-package com.ronyhe.sweeper.model.board
+package com.ronyhe.sweeper.model
 
-import com.ronyhe.sweeper.com.ronyhe.sweeper.model.{Board, Coord}
+import com.ronyhe.sweeper.com.ronyhe.sweeper.model.Coord
+import com.ronyhe.sweeper.model.{Coord, Board}
 import org.scalatest.{FunSuite, PrivateMethodTester}
 
 class BoardTest extends FunSuite with PrivateMethodTester {

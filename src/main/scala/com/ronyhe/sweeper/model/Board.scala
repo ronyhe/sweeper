@@ -1,6 +1,6 @@
-package com.ronyhe.sweeper.com.ronyhe.sweeper.model
+package com.ronyhe.sweeper.model
 
-import com.ronyhe.sweeper.com.ronyhe.sweeper.model.Board.{MineCellObject, Cell, MineCell}
+import Board.{MineCellObject, Cell, MineCell}
 import com.ronyhe.sweeper.utils.CollectionUtils
 
 import scala.annotation.tailrec
