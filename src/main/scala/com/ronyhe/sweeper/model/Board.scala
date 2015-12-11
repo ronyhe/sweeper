@@ -1,12 +1,13 @@
 package com.ronyhe.sweeper.model
 
-import Board.{MineCellObject, Cell, MineCell}
+import com.ronyhe.sweeper.Coord
+import com.ronyhe.sweeper.model.Board.{Cell, MineCell, MineCellObject}
 import com.ronyhe.sweeper.utils.CollectionUtils
 
 import scala.annotation.tailrec
 import scala.util.Random
 
-class Board(rows: Int, cols: Int, mines:Int, firstClick: Coord) {
+class Board(val rows: Int, val cols: Int, mines:Int, firstClick: Coord) {
   import Board.{NumberCells, illegalIndexMessage}
 
   def apply(coord: Coord): Cell = {
@@ -36,12 +37,13 @@ class Board(rows: Int, cols: Int, mines:Int, firstClick: Coord) {
 
   private def bindingsOfCoordsThatAreAdjacentToMines(mineLocations: Seq[Coord]) = {
     val coordsAdjacentToMines = mineLocations flatMap adjacentCoords
-    val coordsToNumbers = CollectionUtils.itemToAmount(coordsAdjacentToMines)
+    val coordsThatNeedToBeUpdated = coordsAdjacentToMines filterNot mineLocations.contains
+    val coordsToNumbers = CollectionUtils.itemToAmount(coordsThatNeedToBeUpdated)
     val coordsToCells = coordsToNumbers map { t => t._1 -> NumberCells(t._2) }
     CollectionUtils.tupleMap(coordsToCells)
   }
 
-  private def adjacentCoords(to: Coord): Seq[Coord] = {
+  def adjacentCoords(to: Coord): Seq[Coord] = {
     val (centerRow, centerCol) = to
     val rowRange = centerRow-1 to centerRow+1
     val colRange = centerCol-1 to centerCol+1
@@ -63,14 +65,14 @@ class Board(rows: Int, cols: Int, mines:Int, firstClick: Coord) {
     def randCoord = random.nextInt(rows) -> random.nextInt(cols)
 
     @tailrec
-    def loop(created: List[Coord], len: Int): Seq[Coord] =
-      if (len == mines) created
+    def loop(created: Set[Coord]): Set[Coord] =
+      if (created.size == mines) created
       else randCoord match {
-        case `firstClick` => loop(created, len)
-        case other => loop(other :: created, len + 1)
+        case `firstClick` => loop(created)
+        case other => loop(created + other)
       }
 
-    loop(Nil, 0)
+    loop(Set.empty).toSeq
   }
 
   override def toString: String = {

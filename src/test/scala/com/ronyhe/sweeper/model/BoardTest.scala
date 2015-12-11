@@ -1,10 +1,33 @@
 package com.ronyhe.sweeper.model
 
-import com.ronyhe.sweeper.com.ronyhe.sweeper.model.Coord
-import com.ronyhe.sweeper.model.{Coord, Board}
+import com.ronyhe.sweeper.Coord
+import com.ronyhe.sweeper.model.Board.MineCell
 import org.scalatest.{FunSuite, PrivateMethodTester}
 
 class BoardTest extends FunSuite with PrivateMethodTester {
+
+  def allCoords(board: Board) = for (r <- 0 until board.rows; c <- 0 until board.cols) yield r -> c
+
+  test("board contains correct amount of mines") {
+    val board = new Board(16, 30, 99, 0->0)
+    val coords = allCoords(board)
+    val mines = coords.count(board(_).isInstanceOf[MineCell])
+    assert(99 === mines)
+  }
+
+  test("adjacent mine values are correct") {
+    val board = new Board(16, 30, 99, 0->0)
+    val coords = allCoords(board)
+    for (coord <- coords) {
+      val cell = board(coord)
+      if (!cell.isInstanceOf[MineCell]) {
+        val neighbors = board.adjacentCoords(coord)
+        val cells = neighbors map board.apply
+        val mines = cells count (_.isInstanceOf[MineCell])
+        assert(mines === cell.adjacentMines, s"$coord\n$board")
+      }
+    }
+  }
 
   test("adjacentCoords functions properly") {
     val board = new Board(10, 10, 4, 0 -> 0)
